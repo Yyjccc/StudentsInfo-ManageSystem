@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间-->
+<mapper namespace="Mode.Mapper.StudentsMapper">
+    <select id="getAll" resultType="Mode.enity.Student">
+        select * from student
+    </select>
+    <select id="query" resultType="Mode.enity.Student">
+        select * from student 
+        <where>
+            <choose>
+                <when test="type.equals('StudentId')">StudentId=#{value}</when>
+                <when test="type.equals('name')">name=#{value}</when>
+                <when test="type.equals('sex')">sex=#{value}</when>
+                <when test="type.equals('classId')">classId=#{value}</when>
+                <when test="type.equals('department')">department=#{value}</when>
+                <when test="type.equals('birthday')">birthday=#{value}</when>
+                <when test="type.equals('nativePlace')">nativePlace=#{value}</when>
+                <otherwise>1=2</otherwise>
+            </choose>
+        </where>
+    </select>
+    <update id="update">
+        update student set
+        <choose>
+        <when test="type.equals('name')">name=#{value}</when>
+        <when test="type.equals('sex')">sex=#{value}</when>
+        <when test="type.equals('classId')">classId=#{value}</when>
+        <when test="type.equals('department')">department=#{value}</when>
+        <when test="type.equals('birthday')">birthday=#{value}</when>
+        <when test="type.equals('nativePlace')">nativePlace=#{value}</when>
+        <otherwise></otherwise>
+        </choose>
+        where StudentId=#{StudentId}
+    </update>
+    <insert id="insert" parameterType="Mode.enity.Student">
+        Insert into student (StudentId,name,sex,classId,department,birthday,nativePlace)
+            values (#{StudentId},#{name},#{sex},#{classId},#{department},#{birthday,jdbcType=DATE},#{nativePlace})
+    </insert>
+    <delete id="delete">
+        Delete from student where StudentId=#{StudentId}
+    </delete>
+</mapper>

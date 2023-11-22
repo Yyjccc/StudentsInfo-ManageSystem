@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间-->
+<mapper namespace="Mode.Mapper.ActionMapper">
+    <sql id="choose">
+        <choose>
+        <when test="ActionType.equals('reward')">reward</when>
+        <when test="ActionType.equals('change')">changes</when>
+        <when test="ActionType.equals('punishment')">punishment</when>
+        <otherwise>0</otherwise>
+        </choose>
+    </sql>
+    <sql id="common">
+        <choose>
+            <when test="type.equals('StudentId')">StudentId</when>
+            <when test="type.equals('id')">id</when>
+            <when test="type.equals('changeId')">changeId</when>
+            <when test="type.equals('levels')">levels</when>
+            <when test="type.equals('enable')">enable</when>
+            <when test="type.equals('recTime')">recTime</when>
+            <when test="type.equals('description')">description</when>
+            <otherwise>1=2</otherwise>
+        </choose>
+    </sql>
+    <select id="rewardGetAll" resultType="Mode.enity.Action.Reward">
+        select * from reward
+    </select>
+    <select id="changeGetAll" resultType="Mode.enity.Action.Change">
+        select * from changes
+    </select>
+    <select id="punishGetAll" resultType="Mode.enity.Action.Punishment">
+        select * from punishment
+    </select>
+    <select id="changequery" resultType="Mode.enity.Action.Change">
+        select * from changes <where>
+            <include refid="common"/>=#{value}
+        </where>
+    </select>
+
+    <select id="rewardquery" resultType="Mode.enity.Action.Reward">
+        select * from reward <where>
+        <include refid="common"/>=#{value}
+    </where>
+    </select>
+
+    <select id="punishquery" resultType="Mode.enity.Action.Punishment" >
+        select * from punishment <where>
+        <include refid="common"/>=#{value}
+    </where>
+    </select>
+    <update id="update" >
+        update <include refid="choose"/> set
+        <include refid="common"/>=#{value}
+        where id=#{id}
+    </update>
+
+    <insert id="changeinsert" parameterType="Mode.enity.Action.Change">
+        Insert into changes (StudentId,changeId,recTime,description)
+        values (#{StudentId},#{changeId},#{recTime,jdbcType=DATE},#{description})
+    </insert>
+    <insert id="rewardinsert" parameterType="Mode.enity.Action.Reward">
+        Insert into reward (StudentId,levels,recTime,description)
+        values (#{StudentId},#{levels},#{recTime,jdbcType=DATE},#{description})
+    </insert>
+
+    <insert id="punishinsert" parameterType="Mode.enity.Action.Punishment">
+        Insert into punishment (StudentId,levels,recTime,enable,description)
+        values (#{StudentId},#{levels},#{recTime,jdbcType=DATE},#{enable},#{description})
+    </insert>
+    <delete id="delete">
+        Delete from <include refid="choose"/> where id=#{id}
+    </delete>
+
+</mapper>
