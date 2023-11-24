@@ -36,7 +36,7 @@ export default {
         formDatta.append("recTime", form.recTime);
         formDatta.append("description", form.description);
         if (ActionType == 'change') {
-            formDatta.append("change", form.change);
+            formDatta.append("changeId", form.changeId);
             return axios.post(`${apiBaseURL}insert/change`, formDatta);
 
         }
@@ -47,6 +47,7 @@ export default {
         else if (ActionType == 'punishment') {
             formDatta.append("levels", form.levels);
             formDatta.append("enable", form.enable);
+            return axios.post(`${apiBaseURL}insert/punishment`, formDatta);
         }
     },
 

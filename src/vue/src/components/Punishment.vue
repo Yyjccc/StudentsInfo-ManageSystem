@@ -1,7 +1,8 @@
 <template>
     <searchComponent :options="ChangeOptions" :mytypes="typemy" @search-action="ChangeSearch" @return-all="ReturnAll"
         @to-addform="toaddform" />
-    <el-table :data="tableData" style="width: 100%;margin-top: -70px;" :row-class-name="tableRowClassName">
+    <el-table :data="tableData" style="width: 100%;margin-top: -70px;">
+        <el-table-column prop="index" label="序号" width="90" />
         <el-table-column prop="id" label="id" width="150" />
         <el-table-column prop="studentId" label="学号" width="150" />
         <el-table-column prop="levels" label="级别" width="100" />
@@ -27,13 +28,19 @@
 
 
     <div>
-        <el-dialog v-model="dialogFormVisible" title="添加学籍变更信息" :append-to-body="true">
+        <el-dialog v-model="dialogFormVisible" title="添加处分信息" :append-to-body="true">
             <el-form :model="form">
                 <el-form-item label="学号" :label-width="formLabelWidth">
                     <el-input v-model="form.StudentId" autocomplete="off" />
                 </el-form-item>
                 <el-form-item label="级别" :label-width="formLabelWidth">
                     <el-input v-model="form.levels" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="是否生效" :label-width="formLabelWidth">
+                    <el-select v-model="form.enable" placeholder="请选择">
+                        <el-option label="是" value="true" />
+                        <el-option label="否" value="false" />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="记录日期" :label-width="formLabelWidth">
                     <el-date-picker v-model="form.recTime" type="date" placeholder="请选择日期" size="large" />
@@ -56,10 +63,12 @@
 </template>
   
 <script >
-import searchComponent from "./others/search.vue"
 import { ref, reactive, onMounted } from "vue"
-import apiService from "../api/action"
+import apiService from "../api/action.js"
 import mycommon from "../common/check"
+import myformat from "../common/format";
+import searchComponent from "./others/search.vue"
+
 export default {
     components: {
         'searchComponent': searchComponent,
@@ -99,10 +108,7 @@ export default {
                 //转化日期格式
                 if (form.recTime != '') {
                     let date = form.recTime;
-                    const year = date.getFullYear();
-                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const day = date.getDate().toString().padStart(2, '0');
-                    form.recTime = `${year}-${month}-${day}`;
+                    form.recTime = myformat.DateFormat(date);
                 }
                 apiService.insertAction("punishment", form).then(
                     (response) => {
@@ -117,6 +123,7 @@ export default {
                     alert("数据输入错误");
                     console.log(error.message);
                 });
+
             }
 
             dialogFormVisible.value = false;
@@ -180,6 +187,10 @@ export default {
                             index: index + 1, // You can adjust the index starting point if needed
                             ...item,
                         }));
+                        for (let i = 0; i < alldata.value.length; i++) {
+                            let date = myformat.DateFormat(alldata.value[i].recTime);
+                            alldata.value[i].recTime = date;
+                        }
                         maxpage.value = Math.ceil(alldata.value.length / 10);
                     } else {
                         //TODO异常处理...
@@ -243,7 +254,11 @@ export default {
                 tmpsave.value.push(value);
                 if (i > 0) {
                     let index = column[i];
-                    ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    if (index == 'recTime') {
+                        ceil[i].innerHTML = '<input  type="date" name="' + index + '" value="' + value + '" />'
+                    } else {
+                        ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    }
                 }
             }
         }

@@ -60,6 +60,7 @@ import searchComponent from "./others/search.vue"
 import { ref, reactive, onMounted } from "vue"
 import apiService from "../api/action"
 import mycommon from "../common/check"
+import myformat from "../common/format"
 export default {
     components: {
         'searchComponent': searchComponent,
@@ -97,11 +98,8 @@ export default {
             } else {
                 //转化日期格式
                 if (form.recTime != '') {
-                    let date = form.recTime;
-                    const year = date.getFullYear();
-                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const day = date.getDate().toString().padStart(2, '0');
-                    form.recTime = `${year}-${month}-${day}`;
+
+                    form.recTime = myformat.DateFormat(form.recTime);
                 }
                 apiService.insertAction("change", form).then(
                     (response) => {
@@ -175,10 +173,15 @@ export default {
                     // 获取学生信息的 API 方法
                     if (response.data.ok) {
                         let res = response.data.info.data
+
                         alldata.value = res.map((item, index) => ({
                             index: index + 1, // You can adjust the index starting point if needed
                             ...item,
                         }));
+                        for (let i = 0; i < alldata.value.length; i++) {
+                            let date = myformat.DateFormat(alldata.value[i].recTime);
+                            alldata.value[i].recTime = date;
+                        }
                         maxpage.value = Math.ceil(alldata.value.length / 10);
                     } else {
                         //TODO异常处理...
@@ -242,7 +245,11 @@ export default {
                 tmpsave.value.push(value);
                 if (i > 0) {
                     let index = column[i];
-                    ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    if (index == 'recTime') {
+                        ceil[i].innerHTML = '<input  type="date" name="' + index + '" value="' + value + '" />'
+                    } else {
+                        ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    }
                 }
             }
         }

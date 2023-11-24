@@ -40,11 +40,23 @@
 
 
 
+vue项目编译
+
+```
+npm run build
+```
+
+前后端项目整合
+
+按照格式将前端编译后生成的文件放入java项目中
+
+再使用Maven打包成jar包
+
 
 
 ### 一键使用
 
-下载Release包
+下载[Release](https://github.com/Yyjccc/StudentsInfo-ManageSystem/releases/tag/0.1.0)包 运行 
 
 
 运行
@@ -59,9 +71,24 @@ test.sql 一键执行里面
 
 sql语句
 
+
+
+注意！！！
+
+默认数据库mysql配置是
+
+用户名：root
+
+密码：root
+
+若不一样，请下载源码或者加载jar包解压后修改mybatis.xml的配置
+
 ### 未完善功能
+
 (主要是后端)
+
 - 对学生信息的个人所有详细信息的操作
+- springboot未完全整合mybatis
 - 未完善授权登录与用户权限限制
 - 未对定义代码进行替换(没有多表查询)
 - 未使用对使用用户信息的修改与展示(头像、用户名与密码)

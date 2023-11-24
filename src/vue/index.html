@@ -21,6 +21,12 @@
   a :hover {
     text-decoration: none;
     color: #eebe77;
+
+  }
+
+  body {
+    background-image: url("/3.jpg");
+    background-color: hsla(0, 0%, 100%, 0.8);
   }
 
   * {
@@ -46,5 +52,26 @@
   <!-- <div id="login"></div> -->
   <script type="module" src="/src/main.js"></script>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var links = document.querySelectorAll('a');
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        // 移除所有链接上的 'clicked' 类
+        links.forEach(function (otherLink) {
+          otherLink.classList.remove('clicked');
+        });
+
+        // 将当前点击的链接添加 'clicked' 类
+        link.classList.add('clicked');
+
+        // 阻止默认的链接点击行为
+        event.preventDefault();
+      });
+    });
+  });
+
+</script>
 
 </html>

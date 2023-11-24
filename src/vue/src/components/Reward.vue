@@ -27,7 +27,7 @@
 
 
     <div>
-        <el-dialog v-model="dialogFormVisible" title="添加学籍变更信息" :append-to-body="true">
+        <el-dialog v-model="dialogFormVisible" title="添加学生获奖信息" :append-to-body="true">
             <el-form :model="form">
                 <el-form-item label="学号" :label-width="formLabelWidth">
                     <el-input v-model="form.StudentId" autocomplete="off" />
@@ -60,6 +60,8 @@ import searchComponent from "./others/search.vue"
 import { ref, reactive, onMounted } from "vue"
 import apiService from "../api/action"
 import mycommon from "../common/check"
+import myformat from "../common/format"
+
 export default {
     components: {
         'searchComponent': searchComponent,
@@ -180,6 +182,10 @@ export default {
                             index: index + 1, // You can adjust the index starting point if needed
                             ...item,
                         }));
+                        for (let i = 0; i < alldata.value.length; i++) {
+                            let date = myformat.DateFormat(alldata.value[i].recTime);
+                            alldata.value[i].recTime = date;
+                        }
                         maxpage.value = Math.ceil(alldata.value.length / 10);
                     } else {
                         //TODO异常处理...
@@ -243,7 +249,11 @@ export default {
                 tmpsave.value.push(value);
                 if (i > 0) {
                     let index = column[i];
-                    ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    if (index == 'recTime') {
+                        ceil[i].innerHTML = '<input  type="date" name="' + index + '" value="' + value + '" />'
+                    } else {
+                        ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    }
                 }
             }
         }

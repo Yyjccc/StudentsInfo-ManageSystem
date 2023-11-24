@@ -40,12 +40,7 @@
               </router-link>
             </el-menu-item>
 
-            <el-menu-item index="5">
-              <el-icon>
-                <setting />
-              </el-icon>
-              <span>账号设置</span>
-            </el-menu-item>
+
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -122,7 +117,7 @@ export default {
 }
 
 .layout-container-demo .el-aside {
-  color: var(--el-text-color-primary);
+  /* color: var(--el-text-color-primary); */
   background: var(--el-color-primary-light-8);
 }
 

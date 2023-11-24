@@ -96,7 +96,7 @@
 import { ref, reactive, onMounted, computed, getCurrentInstance } from 'vue'
 import apiService from "../api"
 import mycommon from "../common/check"
-
+import myformat from "../common/format"
 
 
 export default {
@@ -186,6 +186,10 @@ export default {
                     id: index + 1, // You can adjust the index starting point if needed
                     ...item,
                 }));
+                for (let i = 0; i < alldata.value.length; i++) {
+                    let date = myformat.DateFormat(alldata.value[i].birthday);
+                    alldata.value[i].birthday = date;
+                }
                 maxpage.value = Math.ceil(alldata.value.length / 10);
             } else {
                 //TODO异常处理...
@@ -236,7 +240,11 @@ export default {
                 tmpsave.value.push(value);
                 if (i > 0) {
                     let index = column[i];
-                    ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    if (index == 'birthday') {
+                        ceil[i].innerHTML = '<input  type="date" name="' + index + '" value="' + value + '" />'
+                    } else {
+                        ceil[i].innerHTML = '<input name="' + index + '" value="' + value + '" />'
+                    }
                 }
             }
         };
